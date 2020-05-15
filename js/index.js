@@ -1,12 +1,13 @@
 var firebaseConfig = {
-    apiKey: "AIzaSyBcsY211hnIfJK6lYpvD7-dj66RpQyuVww",
-    authDomain: "fir-webapp-fe1d9.firebaseapp.com",
-    databaseURL: "https://fir-webapp-fe1d9.firebaseio.com",
-    projectId: "fir-webapp-fe1d9",
-    storageBucket: "fir-webapp-fe1d9.appspot.com",
-    messagingSenderId: "397492290604",
-    appId: "1:397492290604:web:ca06000b43490e0b9d7d89",
-    measurementId: "G-DK55N6JQMC"
+    apiKey: "AIzaSyA2Hv8AsEzTCy4R6-Qq1US7FFReMvt6SwI",
+    authDomain: "alumniweb-8e98f.firebaseapp.com",
+    databaseURL: "https://alumniweb-8e98f.firebaseio.com",
+    projectId: "alumniweb-8e98f",
+    storageBucket: "alumniweb-8e98f.appspot.com",
+    messagingSenderId: "1075615363778",
+    appId: "1:1075615363778:web:d8dbd47a5ec3356a5a815b",
+    measurementId: "G-QNXXBXCW2W"
+
   };
 
   // Initialize Firebase
