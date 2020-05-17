@@ -19,6 +19,10 @@
 
         <!--Boostrap-->
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+
+        <link href="https://fonts.googleapis.com/css2?family=Noto+Serif&display=swap" rel="stylesheet"> 
+
+
     </head>
 
     <body>
@@ -48,25 +52,26 @@
           </nav> 
 
         <div class="container" style="background: white; margin-top: 30px;margin-bottom: 30px; ">
-                    <div class="table-responsive" style="width:100%;line-height:3em;overflow:scroll; margin-top: 20px; height: 650px;margin-top:10px;">
-                        <table class = "table" id ="discussbox" style= "max-width: 100%;" >
+                    <div class="table-responsive-md" style="width:100%;line-height:3em;overflow:scroll; margin-top: 20px; height: 650px;margin-top:10px;">
+                        <table class = "table" id ="discussbox" >
                             <thead>
                             </thead>
                             <tbody>
-                            <tr style="border: none;">
+                            <tr>
                             </tr>
                         </tbody>
                         </table>
                     </div>
+
+
                     <div class="form-wrapper" id="chatinput">
 
-                        <input id="chatext" type="text" placeholder="Enter Text" class="form-control" style="margin-top:10px;">
+                        <textarea id="chatext" type="text" placeholder="Enter Text" class="form-control" style="margin-top:10px;"></textarea>
 
-                          </svg></i>
                     </div>
                     <div class="form-group container-login100-form-btn">
-                        <button id="btn-submittext" type="button" style="margin-top:10px;margin-bottom: 10px;">Submit
-
+                        <button id="btn-submittext" type="button" style="margin-top:10px;">Send
+                            <i class="zmdi zmdi-arrow-right"></i>
                         </button>
                     </div>
 
@@ -157,23 +162,29 @@
              firebase.database().ref('Message').on('value',(snap)=>{var data = snap.val();
                     var i = 0;
                     $("#discussbox tr").remove();
+                    
                     console.log("Triggered");
                      for(key in data) {
                          if(data.hasOwnProperty(key)) {
                              var value = data[key];
                              
                              records = Object.values(value);
+                             
                              var table = document.getElementById("discussbox");
                              var row = table.insertRow(i);
                              var cell1 = row.insertCell(0);
                              var cell2 = row.insertCell(1);
                              cell1.innerHTML = records[1] + " (Batch of " +records[2] + ") :" ;
                              cell2.innerHTML = records[0];
-                             
                              i = i + 1;
-                             
+                            }
                          }
-                     }
+                         var table = document.getElementById("discussbox");
+                         table.scrollIntoView(false);
+
+                         var input = document.getElementById("chatext");
+                         input.value="";
+                     
                  });
             
 
