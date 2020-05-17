@@ -114,15 +114,10 @@ button {
         border-bottom: 3px solid white;
         padding: 6px 0; 
       }
-      table, td {
-        border: 1px solid black;
-        width :100%;
-        
-        
-      }
+
 
       table tr{
-        border-bottom: 1px solid #666;
+      
         display: table;
         width:100%;
       }
@@ -130,7 +125,7 @@ button {
         background: #f2f2f2;
         width:100%;
       }
-      table th, table td{
+      th, td{
         padding: 5px;
         display: table-row;
         width: 100%;
@@ -138,7 +133,12 @@ button {
 
       td{
         margin-left: 5px;
+        font-family: 'Noto Serif', serif;
+        max-width: 100%;
+        white-space:pre;
       }
+
+      
       
     
 
