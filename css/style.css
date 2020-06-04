@@ -173,6 +173,17 @@ button {
         color: black;
       }
 
+       #newicon{
+        animation-name: newicon;
+        animation-iteration-count: infinite;
+        animation-duration: 2s;
+      }
+      @keyframes newicon {
+        0% {opacity: 0;}
+        50% {opacity: 1;}
+        100% {opacity: 0;}
+      }
+
       
       
   
