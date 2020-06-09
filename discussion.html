@@ -21,6 +21,7 @@
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
 
         <link href="https://fonts.googleapis.com/css2?family=Noto+Serif&display=swap" rel="stylesheet"> 
+        <link href="https://fonts.googleapis.com/css2?family=Lora&display=swap" rel="stylesheet">
 
 
     </head>
@@ -32,7 +33,6 @@
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsibleNavbar">
               <span class="navbar-toggler-icon"></span>
             </button>
-          
             <!-- Navbar links -->
             <div class="collapse navbar-collapse" id="collapsibleNavbar">
               <ul class="navbar-nav">
@@ -51,9 +51,9 @@
             </div>
           </nav> 
 
-        <div class="container" style="background: white; margin-top: 30px;margin-bottom: 30px; ">
+        <div class="container" style="background: white; margin-top: 30px;margin-bottom: 30px;border-radius: 10px; ">
                     <div class = "wrapper" style = "padding-top : 10px;">
-                        <div class="table" style="line-height:3em;overflow:scroll; height: 650px;margin-top:10px;">
+                        <div class="table" >
                             <div class = "container" id ="discussbox" >
                                 <!--
                                 <thead>
@@ -63,18 +63,21 @@
                                 </tr>
                             </tbody>-->
                         </div>
-                        
+
                         </div>
     
-    
+                        <div id = "replyshowlist">
+                            <p id="replyuser"></p>
+                            <p id="replymmsg"></p>
+                        </div>
                         <div class="form-wrapper" id="chatinput">
-    
-                            <textarea id="chatext" type="text" placeholder="Enter Text" class="form-control" style="margin-top:10px;"></textarea>
+                            
+                            <textarea id="chatext" type="text" placeholder="Enter Text" class="form-control" style="margin-top:10px;border-radius: 10px;box-shadow: 0 0 0  #000;"></textarea>
     
                         </div>
-                        <div class="form-group container-login100-form-btn" style ="padding-bottom: 10px;">
-                            <button id="btn-submittext" type="button" style="margin-top:10px;">Send
-                                <i class="zmdi zmdi-arrow-right"></i>
+                        <div style ="padding-bottom: 10px;">
+                            <button id="btn-submittext" class="btn btn-outline-primary" type="button" style="margin-top:10px;">Send
+                                
                             </button>
                         </div>
                     </div>
@@ -116,65 +119,21 @@
             });
         </script>
         <script>
-            
-           
 
-            $("#btn-submittext").click(function(){
-                
-                var text = $("#chatext").val();
-                if(text!=""){
-                    var userID = firebase.auth().currentUser.uid;
-                var rootRef = firebase.database().ref().child("Message");
-                var serverTime;
-                firebase.database().ref("/.info/serverTimeOffset").on('value', function(offset) {
-                    var offsetVal = offset.val() || 0;
-                    serverTime = Date.now() + offsetVal;
-                    
-                });
-                
-                var usersRef = rootRef.child(serverTime);
-                firebase.database().ref('Users/'+ userID ).on('value',(snap)=>{
-                        var data = snap.val();
-                        console.log(Object.values(data));
-                        firstName = Object.values(data)[2];
-                        lastName = Object.values(data)[4];
-                        yearofpass = Object.values(data)[7];
-                        namE = firstName +" "+  lastName;
-                        
-                        var userMessage= {
-                                "Message": text,
-                                "User": namE, 
-                                "Year Of Pass" : yearofpass 
-                            };   
-
-                        usersRef.set(userMessage, function(error){
-                                if(error){
-                                    var errorCode = error.code;
-                                    var errorMessage = error.message;
-                                    console.log(errorCode);
-                                    window.alert("Message : "+ errorMessage);
-                                }
-                            });
-                    });
-                }else{
-                    window.alert("Enter Text");
-                }
-            });
-            
-
-                   
              firebase.database().ref('Message').on('value',(snap)=>{var data = snap.val();
                     var i = 0;
-                    $("#discussbox tr").remove();
-                    
+                    $("#discussbox div").remove();
+
                     console.log("Triggered");
                      for(key in data) {
                          if(data.hasOwnProperty(key)) {
                              var value = data[key];
-                             
+
                              records = Object.values(value);
-                             
+                            
+
                              var table = document.getElementById("discussbox");
+
                               /*var row = table.insertRow(i);
                              var cell1 = row.insertCell(0);
                              var cell2 = row.insertCell(1);
@@ -184,28 +143,181 @@
                             //console.log();
                             //records[0].replace(/\n\r?/g, "<br />"));
                             records[0] = records[0].replace(/\n/g,"<br>");;
-                            var elm = '<div class = "txtcontainer">' +
-                                '<div style = "margin-left: 14px; color: black;">'+
-                                records[1] + " (Batch of " +records[2] + ") :"+
-                                '</div>'+
-                                '<div class = "container" id = "msgcontainer" style = "word-wrap: break-word;">'+ records[0] + '</div>' +
-                                    '</div>';
-                            $(elm).appendTo(table);
+                            //console.log(records[3].length, (firebase.auth().currentUser && firebase.auth().currentUser.email).length);
+                            if((records[3]) === (firebase.auth().currentUser && firebase.auth().currentUser.email)){
+                                //console.log("ok");
+
+                                    if(records[4] == '1'){
+                                        var elm = '<div class = "txtcontainer">' +
+                                        '<div style = "margin-left: 14px; color: black;">'+
+                                        records[1] + " (Batch of " +records[2] + ") "+'<i class="fa fa-reply" aria-hidden="true" onClick="redirect(\'' + records[0] + '\', \'' + records[1] + '\');"></i>'+
+                                        '</div>'+
+                                        '<div class = "container" id = "msgcontainer" style = "word-wrap: break-word;">'+ records[0] + '</div>' +
+                                            '</div>';
+                                    }else{
+                                        var elm1 = '<div id = "replyshowdiscuss1">'+
+                                                '<div id = "replyingto" style="margin-left:10px;">'+ 
+                                                    '<p>'+'Replying To :'+'<p id="replyuserr" style="margin-top:-40px;">'+records[4]+'</p>'+'</p>'+  
+                                                '</div>'+
+                                                '<div style="margin-left:10px;margin-top:-40px;">'+
+                                                    '<p>'+'Message :'+ '</p>'+
+                                                    '<div id = "replymessg" style="margin-top:-40px;">'+
+                                                        '<p id = "replymmssg" style = "word-wrap: break-word;margin-top:-40px;">'+records[5]+'</p>'+
+                                                    '</div>'+
+                                                '</div>'+
+                                            '</div>';
+
+                                        var elm2 = '<div class = "txtcontainer">' +
+                                        '<div style = "margin-left: 14px; color: black;">'+
+                                        records[1] + " (Batch of " +records[2] + ") "+'<i class="fa fa-reply" aria-hidden="true" onClick="redirect(\'' + records[0] + '\', \'' + records[1] + '\');"></i>'+
+                                        '</div>'+
+                                        '<div class = "container" id = "msgcontainer" style = "word-wrap: break-word;">'+ records[0] + '</div>' +
+                                            '</div>';
+
+                                        var elm = elm1 + elm2;
+                                    }
+
+
+                                $(elm).appendTo(table);
+                                }else{
+                                    //console.log(records[4]);
+                                    //console.log("SuperOk");
+                                    if(records[4] == '1'){
+                                        var elm = '<div class = "replytxtcontainer">' +
+                                        '<div style = "margin-left: 14px; color: black;">'+
+                                        records[1] + " (Batch of " +records[2] + ") "+'<i class="fa fa-reply" aria-hidden="true" onClick="redirect(\'' + records[0] + '\', \'' + records[1] + '\');"></i>'+
+                                        '</div>'+
+                                        '<div class = "container" id = "msgcontainer" style = "word-wrap: break-word;">'+ records[0] + '</div>' +
+                                            '</div>';
+                                    }if(records[4] != '1'){
+                                        var elem1 = '<div id = "replyshowdiscuss2">'+
+                                                '<div id = "replyingto" style="margin-left:10px;">'+ 
+                                                    '<p>'+'Replying To :'+'<p id="replyuserr" style="margin-top:-40px;">'+records[4]+'</p>'+'</p>'+  
+                                                '</div>'+
+                                                '<div style="margin-left:10px;margin-top:-40px;">'+
+                                                    '<p>'+'Message :'+ '</p>'+
+                                                    '<div id = "replymessg" style="margin-top:-40px;">'+
+                                                        '<p id = "replymmssg" style = "word-wrap: break-word;">'+records[5]+'</p>'+
+                                                    '</div>'+
+                                                '</div>'+
+                                            '</div>';
+
+                                        var elm2 = '<div class = "replytxtcontainer">' +
+                                        '<div style = "margin-left: 14px; color: black;">'+
+                                        records[1] + " (Batch of " +records[2] + ") "+'<i class="fa fa-reply" aria-hidden="true" onClick="redirect(\'' + records[0] + '\', \'' + records[1] + '\');"></i>'+
+                                        '</div>'+
+                                        '<div class = "container" id = "msgcontainer" style = "word-wrap: break-word;">'+ records[0] + '</div>' +
+                                            '</div>';
+
+                                        var elm = elem1 + elm2;
+                                    }
+
+
+                                    
+
+                                $(elm).appendTo(table);
+                                }
+
                             }
                          }
+
                          var table = document.getElementById("discussbox");
                          table.scrollIntoView(false);
 
                          var input = document.getElementById("chatext");
                          input.value="";
-                     
                  });
-            
 
         </script>
- 
- 
- 
- 
+
+        <script>
+
+             $("#btn-submittext").click(function(){
+                    
+                    replyusser =document.getElementById("replyuser").innerHTML;
+                    if(replyusser  === ""){
+                        replyusser="1";
+                    }
+                    reply = document.getElementById("replymmsg").innerHTML;
+                    if(reply === ""){
+                        reply="1";
+                    }
+                    //console.log(replyusser, reply);
+                    
+                    var text = $("#chatext").val();
+                    if(text!=""){
+                        var userID = firebase.auth().currentUser.uid;
+                    var rootRef = firebase.database().ref().child("Message");
+                    var serverTime;
+                    firebase.database().ref("/.info/serverTimeOffset").on('value', function(offset) {
+                        var offsetVal = offset.val() || 0;
+                        serverTime = Date.now() + offsetVal;
+
+                    });
+
+                    var usersRef = rootRef.child(serverTime);
+                    firebase.database().ref('Users/'+ userID ).on('value',(snap)=>{
+                        $("#discussbox div").remove();
+                            var data = snap.val();
+                            //console.log(Object.values(data));
+                            firstName = Object.values(data)[2];
+                            lastName = Object.values(data)[4];
+                            yearofpass = Object.values(data)[7];
+                            //console.log(replyuser, reply);
+                            var email = firebase.auth().currentUser && firebase.auth().currentUser.email;
+                            namE = firstName +" "+  lastName;
+                            var userMessage= {
+                                    "Message": text,
+                                    "User": namE, 
+                                    "Year Of Pass" : yearofpass ,
+                                    "zEmail " : email,
+                                    "zzuserreply" : reply,
+                                    "zzuser" : replyusser
+                                };   
+
+                            usersRef.set(userMessage, function(error){
+                                    if(error){
+                                        var errorCode = error.code;
+                                        var errorMessage = error.message;
+                                        console.log(errorCode);
+                                        window.alert("Message : "+ errorMessage);
+                                    }
+                                });
+
+                            $("#replyshowlist div").remove();
+                        });
+                    }else{
+                        window.alert("Enter Text");
+                    }
+                });
+
+                function redirect(text, name){
+                    $("#replyshowlist div").remove();
+                    //console.log(text, name);
+
+                    elem = '<div id = "replyshow">'+
+                        '<i class="fa fa-times" aria-hidden="true" onClick="closse();" style="float:right;margin-right:15px;margin-top:10px;"></i>'+
+                        
+                        '<div id = "replyingto" style="margin-left:10px; ">'+ 
+                            '<p>'+'Replying To :'+'<p id="replyuser" style="margin-top:-20px;">'+name+'</p>'+'</p>'+  
+                        '</div>'+
+                        '<div style="margin-left:10px;margin-top:-20px;">'+
+                            '<p>'+'Message :'+ '</p>'+
+                            '<div id = "replymessg" style="margin-top:-20px;">'+
+                                '<p id = "replymmsg" style = "word-wrap: break-word;">'+text+'</p>'+
+                            '</div>'+
+                        '</div>'+
+                    '</div>'
+
+
+                    $(elem).prependTo('#replyshowlist');
+                    //replyshowlist.innerHTML = text;
+                }
+
+            function closse(){
+                
+                $("#replyshowlist div").remove();
+            }
+        </script>
     </body>
 </html>
