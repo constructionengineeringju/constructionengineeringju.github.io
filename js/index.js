@@ -66,6 +66,7 @@ var firebaseConfig = {
     var furtheredu = $('#furtheredu').val();
     var newpass = $('#newpass').val();
     var file = $('#image').prop('files');
+    var dob = $('#dob').val();
     
     var blob = new Blob(file, { type: "image/jpeg/png/jpg" });
     
@@ -83,7 +84,7 @@ var firebaseConfig = {
 
     console.log("before triggered");
     
-    if(FirstName!= ""  && LastName!= "" && presentorg != "" && desig != "" && phnnumber != "" && yearofpass !="" && newpass!=""){
+    if(FirstName!= ""  && LastName!= "" && presentorg != "" && desig != "" && phnnumber != "" && yearofpass !="" && newpass!="" && dob!=""){
 
         var imgurl;
         //const metadata = { contentType: 'image/jpeg' }; // or whatever you want
@@ -109,7 +110,8 @@ var firebaseConfig = {
             "Present Organisation": presentorg,
             "Designation": desig,
             "Further Education": furtheredu,
-            "zzNew Password": newpass
+            "zzNew Password": newpass,
+            "zzzDOB": dob
 
             
         };
