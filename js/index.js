@@ -53,7 +53,7 @@ var firebaseConfig = {
                     }else{
                         var dob = prompt("Please enter your Date Of Birth : ");
                             if(dob != null && dob != ""){
-                                userRef.child('zzzdob').set(dob, function(error){
+                                userRef.child('zzzDOB').set(dob, function(error){
                                     if(error){
                                         var errorCode = error.code;
                                         var errorMessage = error.message;
