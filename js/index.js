@@ -42,7 +42,31 @@ var firebaseConfig = {
             var userID = firebase.auth().currentUser.uid;
             firebase.database().ref('Users/' + userID).once('value').then(function(snapshot){
                 if(snapshot.val()){
-                    window.location.href = "MainPage.html";
+                   var userRef = firebase.database().ref().child("Users").child(userID);
+                    //window.alert('ok');
+                    userRef.on('value',(snap)=>{
+                        var data = snapshot.val();
+                        data = Object.values(data);
+                        elements = data.length;
+                        if(elements === 11){
+                        window.location.href = "MainPage.html";
+                    }else{
+                        var dob = prompt("Please enter your Date Of Birth : ");
+                            if(dob != null && dob != ""){
+                                userRef.child('zzzdob').set(dob, function(error){
+                                    if(error){
+                                        var errorCode = error.code;
+                                        var errorMessage = error.message;
+                                        console.log(errorCode);
+                                        window.alert("Message : "+ errorMessage);
+
+                                    }else{
+                                        window.location.href = "MainPage.html";
+                                }
+                                });
+                            }
+                    }
+                      });
 
                 }else{
                     window.location.href = "accountSettings.html";
